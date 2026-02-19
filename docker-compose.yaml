@@ -12,6 +12,10 @@ x-common-service: &common-service
       hard: 65535
   networks:
     - backend
+  dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    - 1.1.1.1
   extra_hosts:
     - "host.docker.internal:host-gateway"
   logging:
@@ -71,6 +75,10 @@ services:
       MAX_CONCURRENT_PAGES: ${CRAWL_CONCURRENT_REQUESTS:-10}
     networks:
       - backend
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 1.1.1.1
     # Resource limits for Docker Compose (not Swarm)
     cpus: 2.0
     mem_limit: 4G
