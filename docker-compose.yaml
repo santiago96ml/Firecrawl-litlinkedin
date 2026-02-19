@@ -1,8 +1,6 @@
 services:
   playwright-service:
-    build:
-      context: .
-      dockerfile: apps/playwright-service-ts/Dockerfile
+    build: apps/playwright-service-ts
     environment:
       PORT: 3000
       PROXY_SERVER: ${PROXY_SERVER}
@@ -20,9 +18,7 @@ services:
     mem_limit: 1G
 
   api:
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
+    build: apps/api
     environment:
       REDIS_URL: ${REDIS_URL:-redis://redis:6379}
       REDIS_RATE_LIMIT_URL: ${REDIS_URL:-redis://redis:6379}
@@ -86,15 +82,14 @@ services:
       start_period: 5s
   
   nuq-postgres:
-    build:
-      context: .
-      dockerfile: apps/nuq-postgres/Dockerfile
+    build: apps/nuq-postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
     networks:
       - backend
+
 
 networks:
   backend:
