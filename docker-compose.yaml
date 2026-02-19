@@ -37,7 +37,8 @@ services:
       TEST_API_KEY: ${TEST_API_KEY}
       LOGGING_LEVEL: ${LOGGING_LEVEL}
       HOST: "0.0.0.0"
-      PORT: ${INTERNAL_PORT:-3002}
+      PORT: 3002
+      INTERNAL_PORT: 3002
       EXTRACT_WORKER_PORT: ${EXTRACT_WORKER_PORT:-3004}
       WORKER_PORT: ${WORKER_PORT:-3005}
       NUQ_RABBITMQ_URL: amqp://rabbitmq:5672
@@ -50,7 +51,7 @@ services:
       rabbitmq:
         condition: service_healthy
     ports:
-      - "${PORT:-3002}:${INTERNAL_PORT:-3002}"
+      - "3002:3002"
     command: node dist/src/harness.js --start-docker
     networks:
       - backend
