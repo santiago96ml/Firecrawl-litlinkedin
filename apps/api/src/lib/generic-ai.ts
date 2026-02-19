@@ -19,7 +19,7 @@ type Provider =
   | "fireworks"
   | "deepinfra"
   | "vertex";
-const defaultProvider: Provider = config.OLLAMA_BASE_URL ? "ollama" : "openai";
+const defaultProvider: Provider = (config.LLM_PROVIDER as Provider) || (config.OLLAMA_BASE_URL ? "ollama" : "openai");
 
 const providerList: Record<Provider, any> = {
   openai: createOpenAI({
@@ -45,19 +45,19 @@ const providerList: Record<Provider, any> = {
     location: "global",
     googleAuthOptions: config.VERTEX_CREDENTIALS
       ? {
-          credentials: JSON.parse(atob(config.VERTEX_CREDENTIALS)),
-        }
+        credentials: JSON.parse(atob(config.VERTEX_CREDENTIALS)),
+      }
       : {
-          keyFile: "./gke-key.json",
-        },
+        keyFile: "./gke-key.json",
+      },
   }),
 };
 
-export function getModel(name: string, provider: Provider = defaultProvider) {
+export function getModel(name: string, provider: Provider = defaultProvider, overrideModel?: string) {
   if (name === "gemini-2.5-pro") {
     name = "gemini-2.5-pro";
   }
-  const modelName = config.MODEL_NAME || name;
+  const modelName = overrideModel || config.MODEL_NAME || name;
   // o3-mini returns empty text via the Responses API — force Chat Completions
   if (provider === "openai" && modelName.startsWith("o3-mini")) {
     return providerList.openai.chat(modelName);

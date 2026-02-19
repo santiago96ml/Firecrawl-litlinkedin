@@ -545,6 +545,7 @@ const baseScrapeOptions = z.strictObject({
   maxAge: z.int().gte(0).optional(),
   minAge: z.int().gte(0).optional(),
   storeInCache: z.boolean().prefault(true),
+  model: z.string().optional(),
   // @deprecated
   __searchPreviewToken: z.string().optional(),
   __experimental_omce: z.boolean().prefault(false).optional(),
@@ -1082,11 +1083,11 @@ export type ErrorResponse = {
 export type ScrapeResponse =
   | ErrorResponse
   | {
-      success: true;
-      warning?: string;
-      data: Document;
-      scrape_id?: string;
-    };
+    success: true;
+    warning?: string;
+    data: Document;
+    scrape_id?: string;
+  };
 
 export interface URLTrace {
   url: string;
@@ -1126,44 +1127,44 @@ export interface ExtractResponse {
 export type AgentResponse =
   | ErrorResponse
   | {
-      success: boolean;
-      id: string;
-    };
+    success: boolean;
+    id: string;
+  };
 
 export type AgentStatusResponse =
   | ErrorResponse
   | {
-      success: boolean;
-      status: "processing" | "completed" | "failed";
-      error?: string;
-      data?: any;
-      model?: "spark-1-pro" | "spark-1-mini";
-      expiresAt: string;
-      creditsUsed?: number;
-    };
+    success: boolean;
+    status: "processing" | "completed" | "failed";
+    error?: string;
+    data?: any;
+    model?: "spark-1-pro" | "spark-1-mini";
+    expiresAt: string;
+    creditsUsed?: number;
+  };
 
 export type AgentCancelResponse =
   | ErrorResponse
   | {
-      success: boolean;
-    };
+    success: boolean;
+  };
 
 export type CrawlResponse =
   | ErrorResponse
   | {
-      success: true;
-      id: string;
-      url: string;
-    };
+    success: true;
+    id: string;
+    url: string;
+  };
 
 export type BatchScrapeResponse =
   | ErrorResponse
   | {
-      success: true;
-      id: string;
-      url: string;
-      invalidURLs?: string[];
-    };
+    success: true;
+    id: string;
+    url: string;
+    invalidURLs?: string[];
+  };
 
 // Map document interface (transitioned from v1)
 export interface MapDocument {
@@ -1176,10 +1177,10 @@ export interface MapDocument {
 export type MapResponse =
   | ErrorResponse
   | {
-      success: true;
-      links?: MapDocument[];
-      warning?: string;
-    };
+    success: true;
+    links?: MapDocument[];
+    warning?: string;
+  };
 
 export type CrawlStatusParams = {
   jobId: string;
@@ -1192,50 +1193,50 @@ export type ConcurrencyCheckParams = {
 export type ConcurrencyCheckResponse =
   | ErrorResponse
   | {
-      success: true;
-      concurrency: number;
-      maxConcurrency: number;
-    };
+    success: true;
+    concurrency: number;
+    maxConcurrency: number;
+  };
 
 export type CrawlStatusResponse =
   | ErrorResponse
   | {
-      success: true;
-      status: "scraping" | "completed" | "failed" | "cancelled";
-      completed: number;
-      total: number;
-      creditsUsed: number;
-      expiresAt: string;
-      next?: string;
-      data: Document[];
-      warning?: string;
-    };
+    success: true;
+    status: "scraping" | "completed" | "failed" | "cancelled";
+    completed: number;
+    total: number;
+    creditsUsed: number;
+    expiresAt: string;
+    next?: string;
+    data: Document[];
+    warning?: string;
+  };
 
 export type OngoingCrawlsResponse =
   | ErrorResponse
   | {
-      success: true;
-      crawls: {
-        id: string;
-        teamId: string;
-        url: string;
-        created_at: string;
-        options: CrawlerOptions;
-      }[];
-    };
+    success: true;
+    crawls: {
+      id: string;
+      teamId: string;
+      url: string;
+      created_at: string;
+      options: CrawlerOptions;
+    }[];
+  };
 
 export type CrawlErrorsResponse =
   | ErrorResponse
   | {
-      errors: {
-        id: string;
-        timestamp?: string;
-        url: string;
-        code?: ErrorCodes;
-        error: string;
-      }[];
-      robotsBlocked: string[];
-    };
+    errors: {
+      id: string;
+      timestamp?: string;
+      url: string;
+      code?: ErrorCodes;
+      error: string;
+    }[];
+    robotsBlocked: string[];
+  };
 
 type AuthObject = {
   team_id: string;
@@ -1368,12 +1369,12 @@ export function fromV0ScrapeOptions(
           ? { type: "screenshot" as const, fullPage: true }
           : null,
         extractorOptions !== undefined &&
-        extractorOptions.mode.includes("llm-extraction")
+          extractorOptions.mode.includes("llm-extraction")
           ? {
-              type: "json" as const,
-              prompt: extractorOptions.userPrompt,
-              schema: extractorOptions.extractionSchema,
-            }
+            type: "json" as const,
+            prompt: extractorOptions.userPrompt,
+            schema: extractorOptions.extractionSchema,
+          }
           : null,
         "links",
       ].filter(x => x !== null),
@@ -1407,10 +1408,10 @@ export function fromV0ScrapeOptions(
       v0DisableJsDom: pageOptions.disableJsDom,
       teamId,
       ...(extractorOptions !== undefined &&
-      extractorOptions.mode.includes("llm-extraction")
+        extractorOptions.mode.includes("llm-extraction")
         ? {
-            v1JSONSystemPrompt: extractorOptions.extractionPrompt,
-          }
+          v1JSONSystemPrompt: extractorOptions.extractionPrompt,
+        }
         : {}),
     },
     // TODO: fallback, fetchPageContent, replaceAllPathsWithAbsolutePaths, includeLinks
@@ -1457,8 +1458,8 @@ export function fromV1ScrapeOptions(
 
       ...(v1ScrapeOptions.__experimental_cache
         ? {
-            maxAge: v1ScrapeOptions.maxAge ?? 4 * 60 * 60 * 1000, // 4 hours
-          }
+          maxAge: v1ScrapeOptions.maxAge ?? 4 * 60 * 60 * 1000, // 4 hours
+        }
         : {}),
       location: v1ScrapeOptions.location ?? v1ScrapeOptions.geolocation,
       formats: v1ScrapeOptions.formats
@@ -1748,31 +1749,31 @@ export type SearchRequestInput = z.input<typeof searchRequestSchema>;
 export type SearchResponse =
   | ErrorResponse
   | {
-      success: true;
-      warning?: string;
-      data: Document[];
-      creditsUsed: number;
-      id: string;
-    }
+    success: true;
+    warning?: string;
+    data: Document[];
+    creditsUsed: number;
+    id: string;
+  }
   | {
-      success: true;
-      warning?: string;
-      data: import("../../lib/entities").SearchV2Response;
-      creditsUsed: number;
-      id: string;
-    }
+    success: true;
+    warning?: string;
+    data: import("../../lib/entities").SearchV2Response;
+    creditsUsed: number;
+    id: string;
+  }
   | {
-      success: true;
-      warning?: string;
-      data: import("../../lib/entities").SearchV2Response;
-      scrapeIds: {
-        web?: string[];
-        news?: string[];
-        images?: string[];
-      };
-      creditsUsed: number;
-      id: string;
+    success: true;
+    warning?: string;
+    data: import("../../lib/entities").SearchV2Response;
+    scrapeIds: {
+      web?: string[];
+      news?: string[];
+      images?: string[];
     };
+    creditsUsed: number;
+    id: string;
+  };
 
 export type TokenUsage = {
   promptTokens: number;

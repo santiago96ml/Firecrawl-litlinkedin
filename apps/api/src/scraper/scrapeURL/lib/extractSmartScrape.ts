@@ -459,7 +459,7 @@ export async function extractData({
           const newExtractOptions = {
             ...extractOptions,
             markdown: markdown,
-            model: getModel("gpt-4o-mini", "openai"),
+            model: getModel("gpt-4o-mini", "openai", extractOptions.options.model),
             retryModel: getModel("gpt-4.1", "openai"),
             costTrackingOptions: {
               costTracking: extractOptions.costTrackingOptions.costTracking,

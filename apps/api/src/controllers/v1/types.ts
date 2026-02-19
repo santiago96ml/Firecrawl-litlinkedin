@@ -521,6 +521,7 @@ const baseScrapeOptions = z.strictObject({
     .gte(0)
     .prefault(1 * 24 * 60 * 60 * 1000),
   storeInCache: z.boolean().prefault(true),
+  model: z.string().optional(),
   // @deprecated
   __experimental_cache: z.boolean().prefault(false).optional(),
   __searchPreviewToken: z.string().optional(),
@@ -1085,11 +1086,11 @@ export type ErrorResponse = {
 export type ScrapeResponse =
   | ErrorResponse
   | {
-      success: true;
-      warning?: string;
-      data: Document;
-      scrape_id?: string;
-    };
+    success: true;
+    warning?: string;
+    data: Document;
+    scrape_id?: string;
+  };
 
 export interface URLTrace {
   url: string;
@@ -1129,28 +1130,28 @@ export interface ExtractResponse {
 export type CrawlResponse =
   | ErrorResponse
   | {
-      success: true;
-      id: string;
-      url: string;
-    };
+    success: true;
+    id: string;
+    url: string;
+  };
 
 export type BatchScrapeResponse =
   | ErrorResponse
   | {
-      success: true;
-      id: string;
-      url: string;
-      invalidURLs?: string[];
-    };
+    success: true;
+    id: string;
+    url: string;
+    invalidURLs?: string[];
+  };
 
 // Note: This type has been transitioned to v2/types.ts (see MapV2Response) while maintaining backwards compatibility
 export type MapResponse =
   | ErrorResponse
   | {
-      success: true;
-      links: string[];
-      scrape_id?: string;
-    };
+    success: true;
+    links: string[];
+    scrape_id?: string;
+  };
 
 export type CrawlStatusParams = {
   jobId: string;
@@ -1163,48 +1164,48 @@ export type ConcurrencyCheckParams = {
 export type ConcurrencyCheckResponse =
   | ErrorResponse
   | {
-      success: true;
-      concurrency: number;
-      maxConcurrency: number;
-    };
+    success: true;
+    concurrency: number;
+    maxConcurrency: number;
+  };
 
 export type CrawlStatusResponse =
   | ErrorResponse
   | {
-      success: true;
-      status: "scraping" | "completed" | "failed" | "cancelled";
-      completed: number;
-      total: number;
-      creditsUsed: number;
-      expiresAt: string;
-      next?: string;
-      data: Document[];
-    };
+    success: true;
+    status: "scraping" | "completed" | "failed" | "cancelled";
+    completed: number;
+    total: number;
+    creditsUsed: number;
+    expiresAt: string;
+    next?: string;
+    data: Document[];
+  };
 
 export type OngoingCrawlsResponse =
   | ErrorResponse
   | {
-      success: true;
-      crawls: {
-        id: string;
-        teamId: string;
-        url: string;
-        created_at: string;
-        options: CrawlerOptions;
-      }[];
-    };
+    success: true;
+    crawls: {
+      id: string;
+      teamId: string;
+      url: string;
+      created_at: string;
+      options: CrawlerOptions;
+    }[];
+  };
 
 export type CrawlErrorsResponse =
   | ErrorResponse
   | {
-      errors: {
-        id: string;
-        timestamp?: string;
-        url: string;
-        error: string;
-      }[];
-      robotsBlocked: string[];
-    };
+    errors: {
+      id: string;
+      timestamp?: string;
+      url: string;
+      error: string;
+    }[];
+    robotsBlocked: string[];
+  };
 
 type AuthObject = {
   team_id: string;
@@ -1413,7 +1414,7 @@ export function fromLegacyScrapeOptions(
           ? ("screenshot@fullPage" as const)
           : null,
         extractorOptions !== undefined &&
-        extractorOptions.mode.includes("llm-extraction")
+          extractorOptions.mode.includes("llm-extraction")
           ? ("extract" as const)
           : null,
         "links",
@@ -1437,12 +1438,12 @@ export function fromLegacyScrapeOptions(
       removeBase64Images: pageOptions.removeBase64Images,
       extract:
         extractorOptions !== undefined &&
-        extractorOptions.mode.includes("llm-extraction")
+          extractorOptions.mode.includes("llm-extraction")
           ? {
-              systemPrompt: extractorOptions.extractionPrompt,
-              prompt: extractorOptions.userPrompt,
-              schema: extractorOptions.extractionSchema,
-            }
+            systemPrompt: extractorOptions.extractionPrompt,
+            prompt: extractorOptions.userPrompt,
+            schema: extractorOptions.extractionSchema,
+          }
           : undefined,
       mobile: pageOptions.mobile,
       fastMode: pageOptions.useFastMode,
@@ -1536,11 +1537,11 @@ export type SearchRequestInput = z.input<typeof searchRequestSchema>;
 export type SearchResponse =
   | ErrorResponse
   | {
-      success: true;
-      warning?: string;
-      data: Document[];
-      id: string;
-    };
+    success: true;
+    warning?: string;
+    data: Document[];
+    id: string;
+  };
 
 export type TokenUsage = {
   promptTokens: number;
