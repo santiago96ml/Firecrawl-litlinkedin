@@ -42,6 +42,8 @@ services:
       EXTRACT_WORKER_PORT: ${EXTRACT_WORKER_PORT:-3004}
       WORKER_PORT: ${WORKER_PORT:-3005}
       NUQ_RABBITMQ_URL: amqp://rabbitmq:5672
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://ollama:11434/api}
+      MODEL_NAME: ${MODEL_NAME:-ministral:latest}
       ENV: local
     depends_on:
       redis:
@@ -90,6 +92,18 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
     networks:
       - backend
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - backend
+    mem_limit: 8G
+
+volumes:
+  ollama_data:
+
 
 
 networks:
