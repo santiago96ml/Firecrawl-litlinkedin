@@ -117,17 +117,33 @@ app.use("/v1", v1Router);
 app.use("/v2", v2Router);
 
 // Root-level aliases for compatibility (e.g. n8n)
+const n8nCompatibilityMiddleware = (req, res, next) => {
+  if (req.body && req.body.url && !req.body.urls) {
+    req.body.urls = [req.body.url];
+    delete req.body.url;
+  }
+  next();
+};
+
 app.post(
   "/agent",
+  n8nCompatibilityMiddleware,
   authMiddleware(RateLimiterMode.Extract),
   countryCheck,
   checkCreditsMiddleware(20),
   blocklistMiddleware,
-  wrap(agentController),
+  wrap(async (req, res) => {
+    if (!config.EXTRACT_V3_BETA_URL) {
+      // If agent beta is not enabled, fallback to extract controller
+      return await extractController(req as any, res as any);
+    }
+    return await agentController(req as any, res as any);
+  }),
 );
 
 app.post(
   "/extract",
+  n8nCompatibilityMiddleware,
   authMiddleware(RateLimiterMode.Extract),
   countryCheck,
   checkCreditsMiddleware(20),

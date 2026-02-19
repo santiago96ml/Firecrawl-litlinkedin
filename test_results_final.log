@@ -1,0 +1,124 @@
+﻿Starting Firecrawl API Verification...
+
+TEST GET /v1/team/credit-usage
+Status: 200
+Response: {
+  "success": true,
+  "data": {
+    "remaining_credits": 99999999,
+    "plan_credits": 99999999,
+    "billing_period_start": "2026-02-19T23:19:16.697Z",
+    "billing_period_end": "2026-03-21T23:19:16.697Z"
+  }
+}
+-------------------
+TEST POST /v1/scrape
+Status: 200
+Response: {
+  "success": true,
+  "data": {
+    "markdown": "Example Domain\n==============\n\nThis domain is for use in documentation examples without needing permission. Avoid use in operations.\n\n[Learn more](https://iana.org/domains/example)",
+    "metadata": {
+      "title": "Example Domain",
+      "language": "en",
+      "viewport": "width=device-width, initial-scale=1",
+      "scrapeId": "019c7833-57e1-74ad-a501-6975d76129be",
+      "sourceURL": "https://example.com",
+      "url": "https://example.com",
+      "statusCode": 200,
+      "contentType": "text/html",
+      "proxyUsed": "basic",
+      "creditsUsed": 1,
+      "concurrencyLimited": false
+    }
+  }
+}
+-------------------
+TEST POST /v1/crawl
+Status: 200
+Response: {
+  "success": true,
+  "id": "019c7833-5ffd-70c0-ad57-c5e711d769c4",
+  "url": "http://localhost:3002/v1/crawl/019c7833-5ffd-70c0-ad57-c5e711d769c4"
+}
+-------------------
+TEST POST /v1/map
+Status: 200
+Response: {
+  "success": true,
+  "links": [
+    "https://example.com"
+  ]
+}
+-------------------
+TEST POST /v1/search
+Status: 200
+Response: {
+  "success": true,
+  "data": [
+    {
+      "url": "https://www.firecrawl.dev/",
+      "title": "Firecrawl - The Web Data API for AI",
+      "description": "The web crawling, scraping, and search API for AI. Built for scale. Firecrawl delivers the entire internet to AI agents and builders. Clean, structured, and ready to reason with."
+    },
+    {
+      "url": "https://github.com/firecrawl/firecrawl",
+      "title": "firecrawl/firecrawl: The Web Data API for AI - GitHub",
+      "description": "Firecrawl is an API that scrapes, crawls, and extracts structured data from any website, powering AI agents and apps with real-time context from the web. Looking for our MCP? Check out the repo here. This repository is in development, and we're still integrating custom modules into the mono repo. It ..."
+    },
+    {
+      "url": "https://www.geeksforgeeks.org/python/firecrawl-web-crawling-for-gen-ai/",
+      "title": "Firecrawl: Web Crawling for Gen AI - GeeksforGeeks",
+      "description": "Firecrawl is an excellent choice if: You are building AI/LLM applications. This is Firecrawl's core use case. The clean, LLM-optimized output and direct integrations with frameworks like LangChain make it the best-in-class tool for creating datasets for Retrieval-Augmented Generation (RAG) and powering AI agents. Your development speed is critical."
+    },
+    {
+      "url": "https://www.freecodecamp.org/news/how-to-turn-websites-into-llm-ready-data-using-firecrawl/",
+      "title": "How to Turn Websites into LLM-Ready Data Using Firecrawl",
+      "description": "Firecrawl is a web crawling and scraping service that helps developers collect clean data from websites. You give it a URL, and it returns the content in formats like Markdown, HTML, JSON, or even screenshots."
+    },
+    {
+      "url": "https://spider.cloud/blog/firecrawl-vs-crawl4ai-vs-spider-honest-benchmark",
+      "title": "Firecrawl vs. Crawl4AI vs. Spider: The Honest Benchmark",
+      "description": "Firecrawl vs. Crawl4AI vs. Spider: The Honest Benchmark A rigorous head-to-head benchmark of the three most-discussed open source scraping tools in the AI space, measuring throughput, success rate, cost, markdown quality, and time to first result across 1,000 URLs."
+    }
+  ],
+  "id": "019c7833-60ec-73f9-ad65-1593f43d376e"
+}
+-------------------
+TEST POST /extract
+Status: 400
+Response: {
+  "success": false,
+  "code": "BAD_REQUEST",
+  "error": "Unrecognized key in body -- please review the v2 API documentation for request body changes",
+  "details": [
+    {
+      "code": "unrecognized_keys",
+      "keys": [
+        "url"
+      ],
+      "path": [],
+      "message": "Unrecognized key: \"url\""
+    }
+  ]
+}
+-------------------
+TEST POST /agent
+Status: 400
+Response: {
+  "success": false,
+  "code": "BAD_REQUEST",
+  "error": "Unrecognized key in body -- please review the v2 API documentation for request body changes",
+  "details": [
+    {
+      "code": "unrecognized_keys",
+      "keys": [
+        "url"
+      ],
+      "path": [],
+      "message": "Unrecognized key: \"url\""
+    }
+  ]
+}
+-------------------
+Verification finished.
