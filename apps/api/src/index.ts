@@ -37,6 +37,16 @@ import { initializeEngineForcing } from "./scraper/WebScraper/utils/engine-forci
 import responseTime from "response-time";
 import { shutdownWebhookQueue } from "./services/webhook";
 import { shutdownIndexerQueue } from "./services/indexing/indexer-queue";
+import { agentController } from "./controllers/v2/agent";
+import { extractController } from "./controllers/v2/extract";
+import { RateLimiterMode } from "./types";
+import {
+  authMiddleware,
+  countryCheck,
+  checkCreditsMiddleware,
+  blocklistMiddleware,
+  wrap,
+} from "./routes/shared";
 
 const { createBullBoard } = require("@bull-board/api");
 const { BullMQAdapter } = require("@bull-board/api/bullMQAdapter");
@@ -105,6 +115,26 @@ app.get("/e2e-test", (_, res) => {
 app.use(v0Router);
 app.use("/v1", v1Router);
 app.use("/v2", v2Router);
+
+// Root-level aliases for compatibility (e.g. n8n)
+app.post(
+  "/agent",
+  authMiddleware(RateLimiterMode.Extract),
+  countryCheck,
+  checkCreditsMiddleware(20),
+  blocklistMiddleware,
+  wrap(agentController),
+);
+
+app.post(
+  "/extract",
+  authMiddleware(RateLimiterMode.Extract),
+  countryCheck,
+  checkCreditsMiddleware(20),
+  blocklistMiddleware,
+  wrap(extractController),
+);
+
 app.use(adminRouter);
 
 const DEFAULT_PORT = config.PORT;
