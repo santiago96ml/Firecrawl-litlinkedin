@@ -1,0 +1,8 @@
+﻿Sending request with prompt length: 12000
+Status Code: 200
+Response Body:
+{
+  "success": true,
+  "id": "019c7858-1c9e-709e-a3f0-a12632d9d8e7",
+  "urlTrace": []
+}

@@ -345,7 +345,7 @@ const jsonFormatWithOptions = z.strictObject({
     .refine(val => validateSchemaForOpenAI(val), {
       message: OPENAI_SCHEMA_ERROR_MESSAGE,
     }),
-  prompt: z.string().max(10000).optional(),
+  prompt: z.string().max(100000).optional(),
 });
 
 export type JsonFormatWithOptions = z.output<typeof jsonFormatWithOptions>;
@@ -650,8 +650,8 @@ const extractOptions = z
     urls: URL.array()
       .max(10, "Maximum of 10 URLs allowed per request while in beta.")
       .optional(),
-    prompt: z.string().max(10000).optional(),
-    systemPrompt: z.string().max(10000).optional(),
+    prompt: z.string().max(100000).optional(),
+    systemPrompt: z.string().max(100000).optional(),
     schema: z
       .any()
       .optional()
@@ -728,7 +728,7 @@ const agentWebhookSchema = createWebhookSchema([
 
 export const agentRequestSchema = z.strictObject({
   urls: URL.array().optional(),
-  prompt: z.string().max(10000),
+  prompt: z.string().max(100000),
   schema: z
     .any()
     .optional()
@@ -901,7 +901,7 @@ const crawlRequestSchemaBase = crawlerOptions.extend({
   limit: z.number().prefault(10000),
   maxConcurrency: z.int().positive().optional(),
   zeroDataRetention: z.boolean().optional(),
-  prompt: z.string().max(10000).optional(),
+  prompt: z.string().max(100000).optional(),
 });
 
 export const crawlRequestSchema = strictWithMessage(crawlRequestSchemaBase)

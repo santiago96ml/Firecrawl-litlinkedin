@@ -203,8 +203,8 @@ export const extractOptions = z
       .refine(val => validateSchemaForOpenAI(val), {
         message: OPENAI_SCHEMA_ERROR_MESSAGE,
       }),
-    systemPrompt: z.string().max(10000).prefault(""),
-    prompt: z.string().max(10000).optional(),
+    systemPrompt: z.string().max(100000).prefault(""),
+    prompt: z.string().max(100000).optional(),
     temperature: z.number().optional(),
   })
   .transform(data => ({
@@ -237,8 +237,8 @@ const extractOptionsWithAgent = z
       .refine(val => validateSchemaForOpenAI(val), {
         message: OPENAI_SCHEMA_ERROR_MESSAGE,
       }),
-    systemPrompt: z.string().max(10000).prefault(""),
-    prompt: z.string().max(10000).optional(),
+    systemPrompt: z.string().max(100000).prefault(""),
+    prompt: z.string().max(100000).optional(),
     temperature: z.number().optional(),
     agent: z
       .strictObject({
@@ -688,8 +688,8 @@ const extractV1Options = z
       .array()
       .max(10, "Maximum of 10 URLs allowed per request while in beta.")
       .optional(),
-    prompt: z.string().max(10000).optional(),
-    systemPrompt: z.string().max(10000).optional(),
+    prompt: z.string().max(100000).optional(),
+    systemPrompt: z.string().max(100000).optional(),
     schema: z
       .any()
       .optional()
