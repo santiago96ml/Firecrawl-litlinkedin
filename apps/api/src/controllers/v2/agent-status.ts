@@ -39,9 +39,12 @@ export async function agentStatusController(
       data = Array.isArray(result) && result.length === 1 ? result[0] : result;
     }
 
+    const status =
+      redisExtract.status === "cancelled" ? "failed" : redisExtract.status;
+
     return res.status(200).json({
       success: true,
-      status: redisExtract.status,
+      status,
       error: redisExtract.error,
       data,
       model: "spark-1-pro", // Default for fallback
