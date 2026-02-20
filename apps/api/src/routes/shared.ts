@@ -331,3 +331,15 @@ export function wrap(
     controller(req, res).catch(err => next(err));
   };
 }
+
+export const n8nCompatibilityMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (req.body && req.body.url && !req.body.urls) {
+    req.body.urls = [req.body.url];
+    delete req.body.url;
+  }
+  next();
+};

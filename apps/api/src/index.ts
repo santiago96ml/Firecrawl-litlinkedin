@@ -46,6 +46,7 @@ import {
   checkCreditsMiddleware,
   blocklistMiddleware,
   wrap,
+  n8nCompatibilityMiddleware,
 } from "./routes/shared";
 
 const { createBullBoard } = require("@bull-board/api");
@@ -117,13 +118,6 @@ app.use("/v1", v1Router);
 app.use("/v2", v2Router);
 
 // Root-level aliases for compatibility (e.g. n8n)
-const n8nCompatibilityMiddleware = (req, res, next) => {
-  if (req.body && req.body.url && !req.body.urls) {
-    req.body.urls = [req.body.url];
-    delete req.body.url;
-  }
-  next();
-};
 
 app.post(
   "/agent",

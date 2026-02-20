@@ -30,6 +30,7 @@ import {
   wrap,
   isValidJobId,
   validateJobIdParam,
+  n8nCompatibilityMiddleware,
 } from "./shared";
 import { queueStatusController } from "../controllers/v2/queue-status";
 import { creditUsageHistoricalController } from "../controllers/v2/credit-usage-historical";
@@ -303,6 +304,7 @@ v2Router.post(
   countryCheck,
   checkCreditsMiddleware(20),
   blocklistMiddleware,
+  n8nCompatibilityMiddleware,
   wrap(extractController),
 );
 
@@ -319,7 +321,14 @@ v2Router.post(
   countryCheck,
   checkCreditsMiddleware(20),
   blocklistMiddleware,
-  wrap(agentController),
+  n8nCompatibilityMiddleware,
+  wrap(async (req, res) => {
+    if (!config.EXTRACT_V3_BETA_URL) {
+      // If agent beta is not enabled, fallback to extract controller
+      return await extractController(req as any, res as any);
+    }
+    return await agentController(req as any, res as any);
+  }),
 );
 
 v2Router.get(
