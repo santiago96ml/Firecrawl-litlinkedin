@@ -1,4 +1,15 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import path from "path";
+
+// Load from default location (cwd)
+dotenv.config();
+
+// Fallback: Try loading from root of the repo (assuming monorepo structure)
+// This handles dev mode (src/config.ts -> ../../../.env) and prod mode (dist/src/config.js -> ../../../../.env)
+// dotenv will not overwrite existing keys, so this only fills in missing values (like LLM_PROVIDER if running from apps/api)
+dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
+dotenv.config({ path: path.resolve(__dirname, "../../../../.env") });
+
 import { z } from "zod";
 
 /* Codecs */

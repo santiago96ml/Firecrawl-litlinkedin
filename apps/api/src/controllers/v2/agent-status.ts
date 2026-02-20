@@ -7,6 +7,11 @@ import {
 import { logger as _logger, logger } from "../../lib/logger";
 import { getJobFromGCS } from "../../lib/gcs-jobs";
 import { config } from "../../config";
+import {
+  getExtract,
+  getExtractResult,
+  getExtractExpiry,
+} from "../../lib/extract/extract-redis";
 
 export async function agentStatusController(
   req: RequestWithAuth<{ jobId: string }, AgentStatusResponse, any>,
@@ -16,77 +21,37 @@ export async function agentStatusController(
     req.params.jobId,
   );
 
-  if (!agentRequest || agentRequest.team_id !== req.auth.team_id) {
-    return res.status(404).json({
-      success: false,
-      error: "Agent job not found",
+  // Fallback: Check Redis for extract job (self-hosted fallback)
+  const redisExtract = await getExtract(req.params.jobId);
+  if (redisExtract) {
+    // Check team_id if possible (req.auth is populated by authMiddleware)
+    if (redisExtract.team_id && redisExtract.team_id !== req.auth.team_id) {
+      return res.status(404).json({
+        success: false,
+        error: "Agent job not found",
+      });
+    }
+
+    let data: any = undefined;
+    if (redisExtract.status === "completed") {
+      const result = await getExtractResult(req.params.jobId);
+      // Flatten single item array to object if needed, matching Agent behavior
+      data = Array.isArray(result) && result.length === 1 ? result[0] : result;
+    }
+
+    return res.status(200).json({
+      success: true,
+      status: redisExtract.status,
+      error: redisExtract.error,
+      data,
+      model: "spark-1-pro", // Default for fallback
+      expiresAt: (await getExtractExpiry(req.params.jobId)).toISOString(),
+      creditsUsed: redisExtract.creditsBilled,
     });
   }
 
-  const agent = await supabaseGetAgentByIdDirect(req.params.jobId);
-
-  let model: "spark-1-pro" | "spark-1-mini";
-  if (agent) {
-    model = (agent.options?.model ?? "spark-1-pro") as
-      | "spark-1-pro"
-      | "spark-1-mini";
-  } else {
-    try {
-      const optionsRequest = await fetch(
-        config.EXTRACT_V3_BETA_URL +
-          "/v2/extract/" +
-          req.params.jobId +
-          "/options",
-        {
-          headers: {
-            Authorization: `Bearer ${config.AGENT_INTEROP_SECRET}`,
-          },
-        },
-      );
-
-      if (optionsRequest.status !== 200) {
-        logger.warn("Failed to get agent request details", {
-          status: optionsRequest.status,
-          method: "agentStatusController",
-          module: "api/v2",
-          text: await optionsRequest.text(),
-        });
-        model = "spark-1-pro"; // fall back to this value
-      } else {
-        model = ((await optionsRequest.json()).model ?? "spark-1-pro") as
-          | "spark-1-pro"
-          | "spark-1-mini";
-      }
-    } catch (error) {
-      logger.warn("Failed to get agent request details", {
-        error,
-        method: "agentStatusController",
-        module: "api/v2",
-        extractId: req.params.jobId,
-      });
-      model = "spark-1-pro"; // fall back to this value
-    }
-  }
-
-  let data: any = undefined;
-  if (agent?.is_successful) {
-    data = await getJobFromGCS(agent.id);
-  }
-
-  return res.status(200).json({
-    success: true,
-    status: !agent
-      ? "processing"
-      : agent.is_successful
-        ? "completed"
-        : "failed",
-    error: agent?.error || undefined,
-    data,
-    model,
-    expiresAt: new Date(
-      new Date(agent?.created_at ?? agentRequest.created_at).getTime() +
-        1000 * 60 * 60 * 24,
-    ).toISOString(),
-    creditsUsed: agent?.credits_cost,
+  return res.status(404).json({
+    success: false,
+    error: "Agent job not found",
   });
 }
