@@ -1,0 +1,33 @@
+{
+  "name": "fire-engine-service",
+  "version": "1.0.0",
+  "description": "self-hosted fire-engine scraper service",
+  "main": "dist/api.js",
+  "scripts": {
+    "dev": "tsx src/api.ts",
+    "build": "tsc",
+    "start": "node dist/api.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "playwright": "^1.58.1",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.15.30",
+    "@types/supertest": "^6.0.2",
+    "@types/uuid": "^10.0.0",
+    "jest": "^30.4.2",
+    "supertest": "^7.1.0",
+    "ts-jest": "^29.4.10",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
