@@ -76,7 +76,7 @@ jobs:
 
       - name: Restore native lib
         id: napi_restore
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: |
             apps/api/native/*.node
@@ -92,7 +92,7 @@ jobs:
 
       - name: Cache native lib
         if: steps.napi_restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             apps/api/native/*.node
@@ -107,7 +107,7 @@ jobs:
 
       - name: Restore Go lib
         id: golib_restore
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: apps/api/sharedLibs/go-html-to-md/libhtml-to-markdown.so
           key: ${{ runner.os }}-golib-${{ hashFiles('apps/api/sharedLibs/go-html-to-md/go.sum', 'apps/api/sharedLibs/go-html-to-md/*.go') }}
@@ -121,7 +121,7 @@ jobs:
 
       - name: Cache Go lib
         if: steps.golib_restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: apps/api/sharedLibs/go-html-to-md/libhtml-to-markdown.so
           key: ${{ steps.golib_restore.outputs.cache-primary-key }}
@@ -129,7 +129,7 @@ jobs:
       - name: Restore Playwright cache
         if: matrix.engine == 'playwright'
         id: pw_cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-${{ runner.arch }}-pw-chromium-${{ hashFiles('apps/playwright-service-ts/pnpm-lock.yaml', 'apps/playwright-service-ts/package.json') }}
@@ -146,7 +146,7 @@ jobs:
 
       - name: Cache Playwright
         if: steps.pw_cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ steps.pw_cache.outputs.cache-primary-key }}
@@ -313,7 +313,7 @@ jobs:
 
   #     - name: Restore native lib
   #       id: napi_restore
-  #       uses: actions/cache/restore@v4
+  #       uses: actions/cache/restore@v5
   #       with:
   #         path: |
   #           apps/api/native/*.node
@@ -329,7 +329,7 @@ jobs:
 
   #     - name: Cache native lib
   #       if: steps.napi_restore.outputs.cache-hit != 'true'
-  #       uses: actions/cache/save@v4
+  #       uses: actions/cache/save@v5
   #       with:
   #         path: |
   #           apps/api/native/*.node
@@ -344,7 +344,7 @@ jobs:
 
   #     - name: Restore Go lib
   #       id: golib_restore
-  #       uses: actions/cache/restore@v4
+  #       uses: actions/cache/restore@v5
   #       with:
   #         path: apps/api/sharedLibs/go-html-to-md/libhtml-to-markdown.so
   #         key: ${{ runner.os }}-golib-${{ hashFiles('apps/api/sharedLibs/go-html-to-md/go.sum', 'apps/api/sharedLibs/go-html-to-md/*.go') }}
@@ -358,7 +358,7 @@ jobs:
 
   #     - name: Cache Go lib
   #       if: steps.golib_restore.outputs.cache-hit != 'true'
-  #       uses: actions/cache/save@v4
+  #       uses: actions/cache/save@v5
   #       with:
   #         path: apps/api/sharedLibs/go-html-to-md/libhtml-to-markdown.so
   #         key: ${{ steps.golib_restore.outputs.cache-primary-key }}
